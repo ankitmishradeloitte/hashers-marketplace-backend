@@ -1,5 +1,7 @@
 import express from 'express' ;
 import dotenv from 'dotenv' ;  
+import mongoose from 'mongoose';
+import authRoutes from './routes/auth' ;
 
 
 dotenv.config(); // loads environment variable from a .env file 
@@ -20,7 +22,13 @@ app.listen(PORT,()=>{
     console.log(`Server running on port ${PORT}`)
 })
 
-
+mongoose.connect(process.env.MONGO_URI!)
+.then(() => {
+    console.log('MongoDB connected');
+  }).catch(err => console.log(err));
+  
+  app.use('/api/auth', authRoutes);
+  
 
 // Middleware functions are functions that have access to the request object (req), the response object (res), and the next middleware function in the application’s request-response cycle. Middleware can:
 
