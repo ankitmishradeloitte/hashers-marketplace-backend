@@ -1,16 +1,14 @@
-
 {
-    "compilerOptions": {
-        "esModuleInterop": true,
-        "target": "ES6",  // compile the code for modern Javascript
-        "module": "CommonJS", // format nodejs understands
-        "outDir": "./dist",  // where to output the compiled code 
-        "rootDir": "./src",  // where our Typescript source code will live (./src)
-        "strict" : true   // ensures strict type-checking
-    },
-
-    "exclude": ["node modules"]
+  "compilerOptions": {
+    "target": "ES6",
+    "module": "commonjs",
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true ,
+    "typeRoots": ["./node_modules/@types", "./types"] 
+  },
+  "include": ["src", "types"]
 }
-
-// Setting "esModuleInterop": true in tsconfig.json makes it easier to work with both CommonJS and ES Modules by allowing default imports from CommonJS modules.
-

@@ -1,23 +1,29 @@
+import { Schema, model, Document } from 'mongoose';
+import bcrypt from 'bcryptjs';
 
-import mongoose from "mongoose";
+interface IUser extends Document {
+  username: string;
+  email: string;
+  password: string;
+  comparePassword: (password: string) => Promise<boolean>;
+}
 
-// mongoose.Schema Defines the shape of a User , A user has an email and password 
-const userSchema  = new mongoose.Schema({
-    email : {
-       type : String ,
-       required : true ,
-       unique : true , 
-    },
+const userSchema = new Schema<IUser>({
+  username: { type: String, required: true, unique: true },
+  email: { type: String, required: true, unique: true },
+  password: { type: String, required: true }
+});
 
-    password : {
-        type : String ,
-        required : true ,
-    },
+userSchema.pre('save', async function (next) {
+  if (!this.isModified('password')) return next();
+  const salt = await bcrypt.genSalt(10);  // pwd hash 10 means complex 
+  this.password = await bcrypt.hash(this.password, salt);
+  next();
+});
 
-}) ;
+userSchema.methods.comparePassword = function (password: string): Promise<boolean> {
+  return bcrypt.compare(password, this.password);
+};
 
-// mongoose model : creates a user model based on the Schema , which we can later use to interact with database 
-const User = mongoose.model('User',userSchema);
-
-export default User ; 
-
+const User = model<IUser>('User', userSchema);
+export default User;
